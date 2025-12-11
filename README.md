@@ -2,6 +2,22 @@
 
 A web crawler-based Android mobile application that helps you search for vehicles from dealers within a specified radius of your location. The app automatically checks for newly posted vehicles and sends notifications when matching vehicles become available.
 
+## 📥 Download APK
+
+**Quick Download Options:**
+
+1. **GitHub Actions (Automated Builds)**:
+   - Go to [GitHub Actions](../../actions)
+   - Click the latest successful workflow run
+   - Download the `app-debug` artifact
+   - Extract and install `app-debug.apk` on your Pixel 8 Pro
+
+2. **Build Locally**:
+   - See [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md) for detailed steps
+   - Use Android Studio or command line
+
+**For detailed build and installation instructions, see [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md)**
+
 ## Features
 
 - **Advanced Search**: Search for vehicles by make/model (e.g., "Toyota Sienna")
