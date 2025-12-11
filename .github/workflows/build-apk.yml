@@ -54,8 +54,39 @@ jobs:
     - name: Validate Gradle wrapper
       uses: gradle/wrapper-validation-action@v2
 
+    - name: Check Java and Gradle versions
+      run: |
+        echo "=== Java Version ==="
+        java -version
+        echo "=== Gradle Version ==="
+        ./gradlew --version
+        echo "=== Environment Variables ==="
+        echo "ANDROID_HOME: $ANDROID_HOME"
+        echo "ANDROID_SDK_ROOT: $ANDROID_SDK_ROOT"
+
+    - name: Clean build
+      run: ./gradlew clean
+
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --stacktrace --info
+      id: build_debug
+      run: |
+        ./gradlew assembleDebug --stacktrace --info 2>&1 | tee build-debug.log
+      continue-on-error: true
+
+    - name: Upload Debug Build Log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-debug-log
+        path: build-debug.log
+        if-no-files-found: ignore
+
+    - name: Check Debug Build Status
+      if: steps.build_debug.outcome == 'failure'
+      run: |
+        echo "Debug build failed. Last 100 lines of log:"
+        tail -100 build-debug.log
+        exit 1
 
     - name: Build Release APK
       run: ./gradlew assembleRelease --stacktrace --info
