@@ -6,10 +6,12 @@ import kotlinx.coroutines.withContext
 
 class VehicleRepository(
     private val vehicleDao: VehicleDao,
-    private val searchCriteriaDao: SearchCriteriaDao
+    private val searchCriteriaDao: SearchCriteriaDao,
+    private val userPreferencesDao: UserPreferencesDao
 ) {
     val allVehicles: LiveData<List<Vehicle>> = vehicleDao.getAllVehicles()
     val allSearchCriteria: LiveData<List<SearchCriteria>> = searchCriteriaDao.getAllSearchCriteria()
+    val userPreferences: LiveData<UserPreferences?> = userPreferencesDao.getUserPreferences()
 
     suspend fun insertVehicle(vehicle: Vehicle): Long = withContext(Dispatchers.IO) {
         vehicleDao.insertVehicle(vehicle)
@@ -61,5 +63,18 @@ class VehicleRepository(
 
     suspend fun getVehicleCount(): Int = withContext(Dispatchers.IO) {
         vehicleDao.getVehicleCount()
+    }
+
+    // User Preferences
+    suspend fun getUserPreferencesSync(): UserPreferences? = withContext(Dispatchers.IO) {
+        userPreferencesDao.getUserPreferencesSync()
+    }
+
+    suspend fun saveUserPreferences(preferences: UserPreferences) = withContext(Dispatchers.IO) {
+        userPreferencesDao.saveUserPreferences(preferences)
+    }
+
+    suspend fun updatePhoneNumber(phoneNumber: String?, enabled: Boolean) = withContext(Dispatchers.IO) {
+        userPreferencesDao.updatePhoneNumber(phoneNumber, enabled)
     }
 }

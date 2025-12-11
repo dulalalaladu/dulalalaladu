@@ -6,13 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [Vehicle::class, SearchCriteria::class],
-    version = 1,
+    entities = [Vehicle::class, SearchCriteria::class, UserPreferences::class],
+    version = 2,
     exportSchema = false
 )
 abstract class VehicleDatabase : RoomDatabase() {
     abstract fun vehicleDao(): VehicleDao
     abstract fun searchCriteriaDao(): SearchCriteriaDao
+    abstract fun userPreferencesDao(): UserPreferencesDao
 
     companion object {
         @Volatile
