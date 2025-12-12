@@ -28,7 +28,8 @@ class VehicleCheckWorker(
     private val database = VehicleDatabase.getDatabase(context)
     private val repository = VehicleRepository(
         database.vehicleDao(),
-        database.searchCriteriaDao()
+        database.searchCriteriaDao(),
+        database.userPreferencesDao()
     )
     private val scraperManager = ScraperManager()
 

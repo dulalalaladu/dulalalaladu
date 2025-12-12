@@ -14,7 +14,8 @@ class VehicleDetailViewModel(application: Application) : AndroidViewModel(applic
     private val database = VehicleDatabase.getDatabase(application)
     private val repository = VehicleRepository(
         database.vehicleDao(),
-        database.searchCriteriaDao()
+        database.searchCriteriaDao(),
+        database.userPreferencesDao()
     )
 
     private val _vehicle = MutableLiveData<Vehicle?>()

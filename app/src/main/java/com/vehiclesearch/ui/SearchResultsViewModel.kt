@@ -12,7 +12,8 @@ class SearchResultsViewModel(application: Application) : AndroidViewModel(applic
     private val database = VehicleDatabase.getDatabase(application)
     private val repository = VehicleRepository(
         database.vehicleDao(),
-        database.searchCriteriaDao()
+        database.searchCriteriaDao(),
+        database.userPreferencesDao()
     )
 
     val vehicles: LiveData<List<Vehicle>> = repository.allVehicles.map { list ->

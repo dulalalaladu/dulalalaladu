@@ -14,7 +14,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val database = VehicleDatabase.getDatabase(application)
     private val repository = VehicleRepository(
         database.vehicleDao(),
-        database.searchCriteriaDao()
+        database.searchCriteriaDao(),
+        database.userPreferencesDao()
     )
     private val scraperManager = ScraperManager()
 
@@ -27,8 +28,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    val userPreferences: LiveData<UserPreferences?> = repository.userPreferences
+
     fun searchVehicles(
-        makeModel: String,
+        make: String,
+        model: String,
         address: String,
         radiusMiles: Int,
         maxMileage: Int?,
@@ -36,12 +40,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         maxYear: Int?,
         fuelType: String?,
         condition: String?,
-        enableNotifications: Boolean
+        enableNotifications: Boolean,
+        phoneNumber: String?
     ) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
                 _error.value = null
+
+                val makeModel = "$make $model".trim()
+
+                // Save phone number if provided
+                if (!phoneNumber.isNullOrEmpty() && enableNotifications) {
+                    repository.updatePhoneNumber(phoneNumber, true)
+                }
 
                 // Geocode address
                 val coordinates = GeocodingUtil.getCoordinatesFromAddress(
@@ -98,6 +110,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 _error.value = "Search failed: ${e.message}"
                 _isLoading.value = false
             }
+        }
+    }
+
+    fun savePhoneNumber(phoneNumber: String?, enabled: Boolean) {
+        viewModelScope.launch {
+            repository.updatePhoneNumber(phoneNumber, enabled)
         }
     }
 
